@@ -1,5 +1,5 @@
 # Source image
-FROM wordpress:5-apache
+FROM wordpress:latest
 
 # Make things cleaner by saving this path on a variable
 ARG XDEBUG_INI="/usr/local/etc/php/conf.d/xdebug.ini"
