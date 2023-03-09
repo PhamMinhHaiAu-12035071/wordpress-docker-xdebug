@@ -21,7 +21,28 @@ add_action("wp_enqueue_scripts", "universityFiles");
 
 function universityFeatures(): void
 {
+    register_nav_menu("headerMenuLocation", "Header Menu Location");
+    register_nav_menu("footerLocationOne", "Footer Location One");
+    register_nav_menu("footerLocationTwo", "Footer Location Two");
     add_theme_support("title-tag");
 }
 
 add_action("after_setup_theme", "universityFeatures");
+
+function universityAdjustQueries(WP_Query $query): void
+{
+    if (!is_admin() && is_post_type_archive("seminar") && $query->is_main_query()) {
+        $query->set("orderby", "meta_value_num");
+        $query->set("order", "ASC");
+        $query->set("meta_key", "event_date");
+        $query->set("meta_query", array(
+            array(
+                "key" => "event_date",
+                "compare" => ">=",
+                "value" => date("Ymd"),
+                "type" => "numeric"
+            )
+        ));
+    }
+}
+add_action("pre_get_posts", "universityAdjustQueries");
